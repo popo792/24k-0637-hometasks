@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+class Exam {
+    int *marks;
+
+    public:
+    Exam (int m) {
+        marks = new int (m);
+    }
+
+    void setMarks (int m){
+        *marks = m;
+    }
+
+    void display () {
+            cout << *marks << endl;
+    }
+
+    ~Exam () {
+        delete marks;
+    }
+};
+
+int main () {
+    Exam e1 (90);
+    e1.display();
+    Exam e2 = e1;
+    e2.display();
+    e2.setMarks(50);
+    e2.display();
+    e1.display();
+}
