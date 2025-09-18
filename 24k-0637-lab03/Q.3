@@ -1,0 +1,148 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int id;
+    string name;
+    int price;
+    Node* prev;
+    Node* next;
+
+    Node(int i, string n, int p) {
+        id = i;
+        name = n;
+        price = p;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+class DoublyList {
+    Node* head;
+
+public:
+    DoublyList() {
+        head = NULL;
+    }
+
+    void addEnd(int i, string n, int p) {
+        Node* t = new Node(i, n, p);
+        if (!head) {
+            head = t;
+            return;
+        }
+        Node* u = head;
+        while (u->next) u = u->next;
+        u->next = t;
+        t->prev = u;
+    }
+
+    void addFront(int i, string n, int p) {
+        Node* t = new Node(i, n, p);
+        if (head) {
+            head->prev = t;
+            t->next = head;
+        }
+        head = t;
+    }
+
+    void delFront() {
+        if (!head) return;
+        Node* t = head;
+        head = head->next;
+        if (head) head->prev = NULL;
+        delete t;
+    }
+
+    void delEnd() {
+        if (!head) return;
+        Node* u = head;
+        while (u->next) u = u->next;
+        if (u->prev) u->prev->next = NULL;
+        else head = NULL;
+        delete u;
+    }
+
+    void find(int key) {
+        Node* u = head;
+        while (u) {
+            if (u->id == key) {
+                cout << u->id << " " << u->name << " " << u->price << endl;
+                return;
+            }
+            u = u->next;
+        }
+        cout << "Not Found" << endl;
+    }
+
+    void update(int key, int np) {
+        Node* u = head;
+        while (u) {
+            if (u->id == key) {
+                u->price = np;
+                return;
+            }
+            u = u->next;
+        }
+    }
+
+    void showForward() {
+        Node* u = head;
+        while (u) {
+            cout << u->id << " " << u->name << " " << u->price << endl;
+            u = u->next;
+        }
+    }
+
+    void showBackward() {
+        if (!head) return;
+        Node* u = head;
+        while (u->next) u = u->next;
+        while (u) {
+            cout << u->id << " " << u->name << " " << u->price << endl;
+            u = u->prev;
+        }
+    }
+
+    int count() {
+        int cnt = 0;
+        Node* u = head;
+        while (u) {
+            cnt++;
+            u = u->next;
+        }
+        return cnt;
+    }
+
+    void maxPrice() {
+        if (!head) return;
+        Node* m = head;
+        Node* u = head->next;
+        while (u) {
+            if (u->price > m->price) m = u;
+            u = u->next;
+        }
+        cout << m->id << " " << m->name << " " << m->price << endl;
+    }
+};
+
+int main() {
+    DoublyList cart;
+
+    cart.addEnd(1, "A", 50);
+    cart.addEnd(2, "B", 100);
+    cart.addFront(0, "Z", 200);
+
+    cart.delFront();
+    cart.delEnd();
+
+    cart.find(2);
+    cart.update(2, 500);
+
+    cart.showForward();
+    cart.showBackward();
+
+    cout << cart.count() << endl;
+    cart.maxPrice();
+}
