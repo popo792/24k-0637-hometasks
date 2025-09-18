@@ -1,67 +1,87 @@
 #include <iostream>
 using namespace std;
 
-struct N1 {
-    string a;
-    int b;
-    N1* c;
+class Node {
+public:
+    string name;
+    int price;
+    Node* next;
+
+    Node(string n, int p) {
+        name = n;
+        price = p;
+        next = NULL;
+    }
 };
 
-N1* make(string q, int r) {
-    N1* t = new N1;
-    t->a = q;
-    t->b = r;
-    t->c = NULL;
-    return t;
-}
+class LinkedList {
+    Node* head;
 
-void pushFront(N1*& p, string q, int r) {
-    N1* t = make(q,r);
-    t->c = p;
-    p = t;
-}
-
-void pushBack(N1*& p, string q, int r) {
-    N1* t = make(q,r);
-    if(!p) { p = t; return; }
-    N1* u = p;
-    while(u->c) u = u->c;
-    u->c = t;
-}
-
-void insertAfter(N1* p, string w, int e, string f) {
-    while(p && p->a != f) p = p->c;
-    if(p) {
-        N1* t = make(w,e);
-        t->c = p->c;
-        p->c = t;
+public:
+    LinkedList() {
+        head = NULL;
     }
-}
 
-void search(N1* p, string f) {
-    while(p) {
-        if(p->a == f) { cout<<f<<" "<<p->b<<endl; return; }
-        p = p->c;
+    void addFront(string n, int p) {
+        Node* t = new Node(n, p);
+        t->next = head;
+        head = t;
     }
-    cout<<"Not Found"<<endl;
-}
 
-void show(N1* p) {
-    while(p) {
-        cout<<p->a<<" "<<p->b<<endl;
-        p = p->c;
+    void addBack(string n, int p) {
+        Node* t = new Node(n, p);
+        if (!head) {
+            head = t;
+            return;
+        }
+        Node* u = head;
+        while (u->next) u = u->next;
+        u->next = t;
     }
-}
+
+    void addAfter(string n, int p, string key) {
+        Node* u = head;
+        while (u && u->name != key) u = u->next;
+        if (u) {
+            Node* t = new Node(n, p);
+            t->next = u->next;
+            u->next = t;
+        }
+    }
+
+    void find(string key) {
+        Node* u = head;
+        while (u) {
+            if (u->name == key) {
+                cout << u->name << " " << u->price << endl;
+                return;
+            }
+            u = u->next;
+        }
+        cout << "Not Found" << endl;
+    }
+
+    void show() {
+        Node* u = head;
+        while (u) {
+            cout << u->name << " " << u->price << endl;
+            u = u->next;
+        }
+    }
+};
 
 int main() {
-    N1* h = NULL;
-    pushBack(h,"Laptop",1000);
-    pushBack(h,"Phone",700);
-    pushBack(h,"Tablet",400);
-    pushBack(h,"Headphones",150);
-    pushFront(h,"Smartwatch",200);
-    pushBack(h,"Keyboard",80);
-    insertAfter(h,"Monitor",300,"Phone");
-    search(h,"Tablet");
-    show(h);
+    LinkedList cart;
+
+    cart.addBack("Laptop", 1000);
+    cart.addBack("Phone", 700);
+    cart.addBack("Tablet", 400);
+    cart.addBack("Headphones", 150);
+
+    cart.addFront("Smartwatch", 200);
+    cart.addBack("Keyboard", 80);
+    cart.addAfter("Monitor", 300, "Phone");
+
+    cart.find("Tablet");
+    cart.show();
 }
