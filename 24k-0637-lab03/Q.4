@@ -1,0 +1,144 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int id;
+    string customer, ride;
+    Node* next;
+
+    Node(int i, string n, string r) {
+        id = i;
+        customer = n;
+        ride = r;
+        next = this;
+    }
+};
+
+class CircularList {
+    Node* head;
+
+public:
+    CircularList() {
+        head = NULL;
+    }
+
+    void addEnd(int i, string n, string r) {
+        Node* t = new Node(i, n, r);
+        if (!head) {
+            head = t;
+            return;
+        }
+        Node* u = head;
+        while (u->next != head) u = u->next;
+        u->next = t;
+        t->next = head;
+    }
+
+    void addFront(int i, string n, string r) {
+        Node* t = new Node(i, n, r);
+        if (!head) {
+            head = t;
+            return;
+        }
+        Node* u = head;
+        while (u->next != head) u = u->next;
+        t->next = head;
+        u->next = t;
+        head = t;
+    }
+
+    void delID(int key) {
+        if (!head) return;
+        Node* u = head;
+        Node* p = NULL;
+        do {
+            if (u->id == key) {
+                if (p) {
+                    p->next = u->next;
+                } else {
+                    Node* q = head;
+                    while (q->next != head) q = q->next;
+                    head = head->next;
+                    q->next = head;
+                }
+                delete u;
+                return;
+            }
+            p = u;
+            u = u->next;
+        } while (u != head);
+    }
+
+    void delFront() {
+        if (!head) return;
+        Node* q = head;
+        while (q->next != head) q = q->next;
+        Node* t = head;
+        head = head->next;
+        q->next = head;
+        delete t;
+    }
+
+    void find(int key) {
+        if (!head) return;
+        Node* u = head;
+        do {
+            if (u->id == key) {
+                cout << u->id << " " << u->customer << " " << u->ride << endl;
+                return;
+            }
+            u = u->next;
+        } while (u != head);
+        cout << "Not Found" << endl;
+    }
+
+    void show() {
+        if (!head) return;
+        Node* u = head;
+        do {
+            cout << u->id << " " << u->customer << " " << u->ride << endl;
+            u = u->next;
+        } while (u != head);
+    }
+
+    int count() {
+        if (!head) return 0;
+        int cnt = 0;
+        Node* u = head;
+        do {
+            cnt++;
+            u = u->next;
+        } while (u != head);
+        return cnt;
+    }
+
+    void nextAfter(int key) {
+        if (!head) return;
+        Node* u = head;
+        do {
+            if (u->id == key) {
+                cout << u->next->id << " " << u->next->customer << " " << u->next->ride << endl;
+                return;
+            }
+            u = u->next;
+        } while (u != head);
+    }
+};
+
+int main() {
+    CircularList tickets;
+
+    tickets.addEnd(1, "Ali", "Ride1");
+    tickets.addEnd(2, "Sara", "Ride2");
+    tickets.addFront(0, "VIP", "Ride0");
+
+    tickets.delID(2);
+    tickets.delFront();
+
+    tickets.find(1);
+    tickets.show();
+
+    cout << tickets.count() << endl;
+    tickets.nextAfter(1);
+}
