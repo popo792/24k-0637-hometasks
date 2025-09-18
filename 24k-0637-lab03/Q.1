@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+struct N1 {
+    string a;
+    int b;
+    N1* c;
+};
+
+N1* make(string q, int r) {
+    N1* t = new N1;
+    t->a = q;
+    t->b = r;
+    t->c = NULL;
+    return t;
+}
+
+void pushFront(N1*& p, string q, int r) {
+    N1* t = make(q,r);
+    t->c = p;
+    p = t;
+}
+
+void pushBack(N1*& p, string q, int r) {
+    N1* t = make(q,r);
+    if(!p) { p = t; return; }
+    N1* u = p;
+    while(u->c) u = u->c;
+    u->c = t;
+}
+
+void insertAfter(N1* p, string w, int e, string f) {
+    while(p && p->a != f) p = p->c;
+    if(p) {
+        N1* t = make(w,e);
+        t->c = p->c;
+        p->c = t;
+    }
+}
+
+void search(N1* p, string f) {
+    while(p) {
+        if(p->a == f) { cout<<f<<" "<<p->b<<endl; return; }
+        p = p->c;
+    }
+    cout<<"Not Found"<<endl;
+}
+
+void show(N1* p) {
+    while(p) {
+        cout<<p->a<<" "<<p->b<<endl;
+        p = p->c;
+    }
+}
+
+int main() {
+    N1* h = NULL;
+    pushBack(h,"Laptop",1000);
+    pushBack(h,"Phone",700);
+    pushBack(h,"Tablet",400);
+    pushBack(h,"Headphones",150);
+    pushFront(h,"Smartwatch",200);
+    pushBack(h,"Keyboard",80);
+    insertAfter(h,"Monitor",300,"Phone");
+    search(h,"Tablet");
+    show(h);
+}
