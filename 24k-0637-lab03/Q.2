@@ -1,64 +1,89 @@
 #include <iostream>
 using namespace std;
 
-struct N2 {
-    string k;
-    int v;
-    N2* n;
+class Node {
+public:
+    string name;
+    int price;
+    Node* next;
+
+    Node(string n, int p) {
+        name = n;
+        price = p;
+        next = NULL;
+    }
 };
 
-N2* build(string q, int r) {
-    N2* t = new N2;
-    t->k=q; t->v=r; t->n=NULL;
-    return t;
-}
+class LinkedList {
+    Node* head;
 
-void addTail(N2*& h, string q, int r) {
-    N2* t = build(q,r);
-    if(!h) { h=t; return; }
-    N2* u=h;
-    while(u->n) u=u->n;
-    u->n=t;
-}
-
-void delFront(N2*& h) {
-    if(!h) return;
-    N2* t=h;
-    h=h->n;
-    delete t;
-}
-
-void findName(N2* h, string x) {
-    while(h) {
-        if(h->k==x) { cout<<h->k<<" "<<h->v<<endl; return; }
-        h=h->n;
+public:
+    LinkedList() {
+        head = NULL;
     }
-    cout<<"Not Found"<<endl;
-}
 
-void findPos(N2* h,int pos) {
-    int c=1;
-    while(h) {
-        if(c==pos) { cout<<h->k<<" "<<h->v<<endl; return; }
-        c++; h=h->n;
+    void addTail(string n, int p) {
+        Node* t = new Node(n, p);
+        if (!head) {
+            head = t;
+            return;
+        }
+        Node* u = head;
+        while (u->next) u = u->next;
+        u->next = t;
     }
-    cout<<"Invalid"<<endl;
-}
 
-void printAll(N2* h) {
-    while(h) {
-        cout<<h->k<<" "<<h->v<<endl;
-        h=h->n;
+    void delFront() {
+        if (!head) return;
+        Node* t = head;
+        head = head->next;
+        delete t;
     }
-}
+
+    void findByName(string key) {
+        Node* u = head;
+        while (u) {
+            if (u->name == key) {
+                cout << u->name << " " << u->price << endl;
+                return;
+            }
+            u = u->next;
+        }
+        cout << "Not Found" << endl;
+    }
+
+    void findByPos(int pos) {
+        int idx = 1;
+        Node* u = head;
+        while (u) {
+            if (idx == pos) {
+                cout << u->name << " " << u->price << endl;
+                return;
+            }
+            u = u->next;
+            idx++;
+        }
+        cout << "Invalid" << endl;
+    }
+
+    void show() {
+        Node* u = head;
+        while (u) {
+            cout << u->name << " " << u->price << endl;
+            u = u->next;
+        }
+    }
+};
 
 int main() {
-    N2* p=NULL;
-    addTail(p,"Item1",50);
-    addTail(p,"Item2",70);
-    addTail(p,"Item3",90);
-    delFront(p);
-    findName(p,"Item2");
-    findPos(p,2);
-    printAll(p);
+    LinkedList cart;
+
+    cart.addTail("One", 11);
+    cart.addTail("Two", 22);
+    cart.addTail("Three", 33);
+
+    cart.delFront();
+    cart.findByName("Two");
+    cart.findByPos(2);
+    cart.show();
 }
