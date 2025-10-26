@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Call {
+    string name;
+    string number;
+    int duration;
+};
+
+class CallStack {
+    static const int MAX = 100;
+    Call stack[MAX];
+    int topIndex;
+
+public:
+    CallStack() { topIndex = -1; }
+    bool empty() { return topIndex == -1; }
+    bool full() { return topIndex == MAX - 1; }
+
+    void push(Call c) {
+        if (full()) {
+            cout << "Call history is full!" << endl;
+            return;
+        }
+        stack[++topIndex] = c;
+        cout << "Call added!" << endl;
+    }
+
+    void pop() {
+        if (empty()) {
+            cout << "No call to remove!" << endl;
+            return;
+        }
+        cout << "Removed: " << stack[topIndex].name << endl;
+        topIndex--;
+    }
+
+    void top() {
+        if (empty()) cout << "No recent calls!" << endl;
+        else cout << "Last call: " << stack[topIndex].name << " (" << stack[topIndex].number << "), " << stack[topIndex].duration << " min" << endl;
+    }
+
+    void display() {
+        if (empty()) {
+            cout << "No call history!" << endl;
+            return;
+        }
+        cout << "Current Call History:" << endl;
+        for (int i = topIndex; i >= 0; i--)
+            cout << stack[i].name << " (" << stack[i].number << "), " << stack[i].duration << " min" << endl;
+    }
+};
+
+int main() {
+    CallStack calls;
+    int choice;
+    do {
+        cout << endl << "1. Add Call  2. Remove Call  3. Show Last Call  4. Display All  0. Exit" << endl;
+        cout << "Choice: ";
+        cin >> choice;
+        if (choice == 1) {
+            Call c;
+            cout << "Name: ";
+            cin >> c.name;
+            cout << "Number: ";
+            cin >> c.number;
+            cout << "Duration: ";
+            cin >> c.duration;
+            calls.push(c);
+        } else if (choice == 2)
+            calls.pop();
+        else if (choice == 3)
+            calls.top();
+        else if (choice == 4)
+            calls.display();
+    } while (choice != 0);
+}
