@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+class Stack {
+    double arr[100];
+    int topIndex;
+public:
+    Stack() { topIndex = -1; }
+    void push(double val) { arr[++topIndex] = val; }
+    double pop() { return arr[topIndex--]; }
+};
+
+int main() {
+    Stack s;
+    string exp;
+    cout << "Enter prefix expression: ";
+    cin >> exp;
+
+    for (int i = exp.size() - 1; i >= 0; i--) {
+        char c = exp[i];
+        if (isdigit(c))
+            s.push(c - '0');
+        else {
+            double a = s.pop();
+            double b = s.pop();
+            if (c == '+') s.push(a + b);
+            else if (c == '-') s.push(a - b);
+            else if (c == '*') s.push(a * b);
+            else if (c == '/') s.push(a / b);
+            else if (c == '^') s.push(pow(a, b));
+        }
+    }
+    cout << "Result: " << s.pop() << endl;
+}
