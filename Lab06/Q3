@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string url;
+    Node* next;
+};
+
+class Stack {
+    Node* topNode;
+public:
+    Stack() { topNode = NULL; }
+    void push(string site) {
+        Node* n = new Node{site, topNode};
+        topNode = n;
+    }
+    void pop() {
+        if (topNode) {
+            Node* temp = topNode;
+            topNode = topNode->next;
+            delete temp;
+        }
+    }
+    string top() { return topNode ? topNode->url : "Empty"; }
+};
+
+void visit(Stack& s, string site) {
+    s.push(site);
+    cout << "Visited: " << site << endl;
+}
+
+int main() {
+    Stack history;
+    string sites[] = {"Google", "Facebook", "Twitter", "LinkedIn", "Instagram"};
+    for (string s : sites)
+        visit(history, s);
+
+    cout << endl << "Going back twice..." << endl;
+    history.pop();
+    history.pop();
+    cout << "Current site: " << history.top() << endl;
+}
