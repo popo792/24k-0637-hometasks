@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+class Stack {
+    double arr[100];
+    int topIndex;
+public:
+    Stack() { topIndex = -1; }
+    void push(double val) { arr[++topIndex] = val; }
+    double pop() { return arr[topIndex--]; }
+    bool empty() { return topIndex == -1; }
+};
+
+int main() {
+    Stack s;
+    string exp;
+    cout << "Enter postfix expression: ";
+    cin >> exp;
+
+    for (char c : exp) {
+        if (isdigit(c))
+            s.push(c - '0');
+        else {
+            double b = s.pop();
+            double a = s.pop();
+            if (c == '+') s.push(a + b);
+            else if (c == '-') s.push(a - b);
+            else if (c == '*') s.push(a * b);
+            else if (c == '/') s.push(a / b);
+            else if (c == '^') s.push(pow(a, b));
+        }
+    }
+    cout << "Result: " << s.pop() << endl;
+}
