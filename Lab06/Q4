@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Stack {
+    char arr[100];
+    int topIndex;
+public:
+    Stack() { topIndex = -1; }
+    void push(char c) { arr[++topIndex] = c; }
+    char pop() { return arr[topIndex--]; }
+    char top() { return arr[topIndex]; }
+    bool empty() { return topIndex == -1; }
+};
+
+int prec(char c) {
+    if (c == '^') return 3;
+    if (c == '*' || c == '/') return 2;
+    if (c == '+' || c == '-') return 1;
+    return -1;
+}
+
+int main() {
+    string infix = "a+b*(c^d-e)^(f+g*h)-i";
+    string postfix = "";
+    Stack s;
+
+    for (char c : infix) {
+        if (isalnum(c)) postfix += c;
+        else if (c == '(') s.push(c);
+        else if (c == ')') {
+            while (!s.empty() && s.top() != '(')
+                postfix += s.pop();
+            s.pop();
+        } else {
+            while (!s.empty() && prec(c) <= prec(s.top()))
+                postfix += s.pop();
+            s.push(c);
+        }
+    }
+    while (!s.empty()) postfix += s.pop();
+    cout << "Postfix: " << postfix << endl;
+}
