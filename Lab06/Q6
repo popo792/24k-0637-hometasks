@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Order {
+    string item;
+    int quantity;
+};
+
+class CircularQueue {
+    static const int MAX = 5;
+    Order q[MAX];
+    int front, rear, count;
+public:
+    CircularQueue() { front = rear = count = 0; }
+    bool full() { return count == MAX; }
+    bool empty() { return count == 0; }
+
+    void enqueue(Order o) {
+        if (full()) {
+            cout << "Queue is full!" << endl;
+            return;
+        }
+        q[rear] = o;
+        rear = (rear + 1) % MAX;
+        count++;
+        cout << "Added: " << o.item << " x" << o.quantity << endl;
+    }
+
+    void dequeue() {
+        if (empty()) {
+            cout << "No orders to process!" << endl;
+            return;
+        }
+        cout << "Processed: " << q[front].item << endl;
+        front = (front + 1) % MAX;
+        count--;
+    }
+
+    void display() {
+        if (empty()) {
+            cout << "No pending orders!" << endl;
+            return;
+        }
+        cout << "Current Orders:" << endl;
+        int i = front;
+        for (int j = 0; j < count; j++) {
+            cout << q[i].item << " x" << q[i].quantity << endl;
+            i = (i + 1) % MAX;
+        }
+    }
+};
+
+int main() {
+    CircularQueue orders;
+    int choice;
+    do {
+        cout << endl << "1. Add Order  2. Process Order  3. Show All  0. Exit" << endl;
+        cout << "Choice: ";
+        cin >> choice;
+        if (choice == 1) {
+            Order o;
+            cout << "Item: ";
+            cin >> o.item;
+            cout << "Quantity: ";
+            cin >> o.quantity;
+            orders.enqueue(o);
+        } else if (choice == 2)
+            orders.dequeue();
+        else if (choice == 3)
+            orders.display();
+    } while (choice != 0);
+}
